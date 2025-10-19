@@ -1,4 +1,26 @@
+import json
+import os
+
 tasks = []
+
+def save_tasks():
+    try:
+        with open("tasks.json", "w", encoding="utf-8") as f:
+            json.dump(tasks, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"ไม่สามารถบันทึกไฟล์ได้: {e}")
+
+def load_tasks():
+    global tasks
+    if not os.path.exists("tasks.json"):
+        tasks = []
+        return
+    try:
+        with open("tasks.json", "r", encoding="utf-8") as f:
+            tasks = json.load(f)
+    except Exception as e:
+        print(f"ไม่สามารถโหลดไฟล์ได้: {e}")
+        tasks = []
 
 def add_task():
     title = input("ชื่อเรื่อง: ").strip()
@@ -113,10 +135,17 @@ def main_menu():
         elif choice == "4":
             delete_task()
         elif choice == "5":
+            save_tasks()
             print("ออกจากโปรแกรม")
             break
         else:
             print("ตัวเลือกไม่ถูกต้อง กรุณาลองใหม่")
 
 if __name__ == "__main__":
-    main_menu()
+    load_tasks()
+    try:
+        main_menu()
+    except KeyboardInterrupt:
+        print("\nยกเลิกโดยผู้ใช้")
+    finally:
+        save_tasks()
