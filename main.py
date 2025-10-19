@@ -1,4 +1,3 @@
-
 tasks = []
 
 def add_task():
@@ -70,8 +69,31 @@ def edit_task():
     pass
 
 def delete_task():
-    # empty
-    pass
+    if not tasks:
+        print("ไม่มีงานให้ลบ")
+        return
+    print("รายการงาน:")
+    for idx, t in enumerate(tasks, start=1):
+        status = "เสร็จแล้ว" if t.get("completed") else "ยังไม่เสร็จ"
+        due = t.get("due_date") or "-"
+        title = t.get("title") or "(ไม่มีชื่อ)"
+        print(f"{idx}. {title}  | วันครบกำหนด: {due}  | สถานะ: {status}")
+    sel = input("เลือกลำดับของงานที่ต้องการลบ (เลข): ").strip()
+    if not sel.isdigit():
+        print("ดัชนีต้องเป็นตัวเลข")
+        return
+    idx = int(sel) - 1
+    if idx < 0 or idx >= len(tasks):
+        print("ดัชนีไม่ถูกต้อง")
+        return
+    task = tasks[idx]
+    print(f"งานที่เลือก: {task.get('title')} (ID: {task.get('id')})")
+    confirm = input("ต้องการลบงานนี้จริงหรือไม่ (y/n): ").strip().lower()
+    if confirm == "y":
+        tasks.pop(idx)
+        print("ลบงานเรียบร้อย")
+    else:
+        print("ยกเลิกการลบ")
 
 def main_menu():
     while True:
