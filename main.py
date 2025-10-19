@@ -23,8 +23,42 @@ def view_tasks():
     # empty
     pass
 
+def update_task():
+    if not tasks:
+        print("ไม่มีงานให้แก้ไข")
+        return
+    print("รายการงาน:")
+    for idx, t in enumerate(tasks, start=1):
+        status = "เสร็จแล้ว" if t.get("completed") else "ยังไม่เสร็จ"
+        print(f"{idx}. [{status}] {t.get('title')} (ID: {t.get('id')})")
+    sel = input("เลือกลำดับของงานที่ต้องการแก้ไข (เลข): ").strip()
+    if not sel.isdigit():
+        print("ดัชนีต้องเป็นตัวเลข")
+        return
+    idx = int(sel) - 1
+    if idx < 0 or idx >= len(tasks):
+        print("ดัชนีไม่ถูกต้อง")
+        return
+    task = tasks[idx]
+    print(f"แก้ไขงาน: {task.get('title')} (ID: {task.get('id')})")
+    new_title = input(f"ชื่อเรื่องใหม่ (ปล่อยว่างเพื่อไม่เปลี่ยน) [{task.get('title')}]: ").strip()
+    new_description = input(f"รายละเอียดใหม่ (ปล่อยว่างเพื่อไม่เปลี่ยน) [{task.get('description')}]: ").strip()
+    cur_completed = "y" if task.get("completed") else "n"
+    new_completed = input(f"สถานะเสร็จแล้ว? (y/n, ปล่อยว่างเพื่อไม่เปลี่ยน) [{cur_completed}]: ").strip().lower()
+
+    if new_title:
+        task["title"] = new_title
+    if new_description:
+        task["description"] = new_description
+    if new_completed == "y":
+        task["completed"] = True
+    elif new_completed == "n":
+        task["completed"] = False
+
+    print("อัปเดตงานเรียบร้อย")
+
 def edit_task():
-    # empty
+    # kept for compatibility (empty)
     pass
 
 def delete_task():
@@ -45,7 +79,7 @@ def main_menu():
         elif choice == "2":
             view_tasks()
         elif choice == "3":
-            edit_task()
+            update_task()
         elif choice == "4":
             delete_task()
         elif choice == "5":
